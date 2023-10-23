@@ -49,7 +49,12 @@ INSTALLED_APPS = [
 ]
 
 THIRD_PARTY_APPS = [
-    'social_django'
+    'social_django',
+    "allauth", 
+    "allauth.account",
+    "allauth.socialaccount", 
+    "allauth.socialaccount.providers.google",
+    "allauth.socialaccount.providers.twitter",
 
 ]
 
@@ -61,26 +66,39 @@ INSTALLED_APPS = INSTALLED_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 
 
+#TODO: Deicde these
 # Auth0 settings
-SOCIAL_AUTH_TRAILING_SLASH = False  # Remove trailing slash from routes
-SOCIAL_AUTH_AUTH0_DOMAIN = '<YOUR-AUTH0-DOMAIN>'
-SOCIAL_AUTH_AUTH0_KEY = '<YOUR-AUTH0-CLIENT-ID>'
-SOCIAL_AUTH_AUTH0_SECRET = '<YOUR-AUTH0-CLIENT-SECRET>'
-SOCIAL_AUTH_AUTH0_SCOPE = [
-    'openid',
-    'profile',
-    'email'
-]
+# SOCIAL_AUTH_TRAILING_SLASH = False  # Remove trailing slash from routes
+# SOCIAL_AUTH_AUTH0_DOMAIN = '<YOUR-AUTH0-DOMAIN>'
+# SOCIAL_AUTH_AUTH0_KEY = '<YOUR-AUTH0-CLIENT-ID>'
+# SOCIAL_AUTH_AUTH0_SECRET = '<YOUR-AUTH0-CLIENT-SECRET>'
+# SOCIAL_AUTH_AUTH0_SCOPE = [
+#     'openid',
+#     'profile',
+#     'email'
+# ]
 
-AUTHENTICATION_BACKENDS = {
-    'social_core.backends.auth0.Auth0OAuth2',
-    'django.contrib.auth.backends.ModelBackend'
-}
+# AUTHENTICATION_BACKENDS = {
+#     'social_core.backends.auth0.Auth0OAuth2',
+#     'django.contrib.auth.backends.ModelBackend'
+# }
 
-LOGIN_URL = '/login/auth0'
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/'
 
+#TODO: need to change these
+# LOGIN_URL = '/login/auth0'
+# LOGIN_REDIRECT_URL = '/'
+# LOGOUT_REDIRECT_URL = '/'
+
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    "allauth.account.auth_backends.AuthenticationBackend",
+)
+
+# SITE_ID = 1
+# ACCOUNT_EMAIL_VERIFICATION = "none"
+# LOGIN_REDIRECT_URL = "/"
+# ACCOUNT_LOGOUT_ON_GET = True
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
