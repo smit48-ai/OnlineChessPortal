@@ -1,0 +1,2 @@
+ C:/Users/SMTC/anaconda3/Scripts/activate
+ npx tailwindcss -i ./static/src/input.css -o ./static/src/output.css --watch

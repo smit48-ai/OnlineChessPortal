@@ -5,7 +5,9 @@
     "tailwindcss": "^3.3.3"
   },
   "dependencies": {
+    "@chrisoakman/chessboardjs": "^1.0.0",
     "browserslist": "^4.22.1",
+    "chess.js": "^1.0.0-beta.6",
     "flowbite": "^1.8.1"
   }
 }

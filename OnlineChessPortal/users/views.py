@@ -1,15 +1,22 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 
-
-
-
+@login_required
+def user_profile(request,pk):
+    #get the data from user model and render it
+    return render(request, 'index.html', {'user':request.user})
 
 
 # signup page
 def user_signup(request):
     if request.method == 'POST':
+        # add validation logic here
+        # 1.proper email
+        # 2.confirma password and paswword are same
         username=request.POST["username"]
         password=request.POST["password"]
         confirmpassword=request.POST["confirm-password"]
@@ -29,8 +36,16 @@ def user_login(request):
             user = authenticate(request, username=username, password=password)
             if user:
                 login(request, user)    
-                return redirect('index')
+                redirect_url = reverse('index', args=[user.id])
+                return HttpResponseRedirect(redirect_url)
             else:
                 return render(request, 'login.html')
     else:
         return render(request, 'login.html')
+    
+
+def user_logout(request):
+    pass
+
+
+
