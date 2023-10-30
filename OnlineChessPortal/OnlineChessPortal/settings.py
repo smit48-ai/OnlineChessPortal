@@ -39,6 +39,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "channels",
+    "daphne",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -55,7 +57,6 @@ THIRD_PARTY_APPS = [
     "allauth.socialaccount", 
     "allauth.socialaccount.providers.google",
     "allauth.socialaccount.providers.twitter",
-
 ]
 
 LOCAL_APPS = [
@@ -117,7 +118,7 @@ TEMPLATES = [
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         'DIRS': [BASE_DIR / 'templates',
                  BASE_DIR / 'users/templates',
-                 BASE_DIR / 'users/templates'],
+                 BASE_DIR / 'ChessGame/templates'],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -131,6 +132,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "OnlineChessPortal.wsgi.application"
+ASGI_APPLICATION = "OnlineChessPortal.asgi.application"
+
 
 
 # Database
@@ -191,3 +194,13 @@ COMPRESS_ROOT = BASE_DIR / 'static'
 COMPRESS_ENABLED = True
 
 STATICFILES_FINDERS = ('compressor.finders.CompressorFinder',)
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('localhost', 6379)],
+        },
+    },
+}
+

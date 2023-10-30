@@ -1,128 +1,203 @@
 <!-- templates/index.html -->
 
-{% extends "_base.html" %}
-
-{% block navbar %}
-<nav class="bg-gray-800 border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-800">
+{% extends "_base.html" %} {% block navbar %}
+<nav
+  class="bg-gray-800 border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-800"
+>
   <div class="container flex flex-wrap items-center justify-between mx-auto">
     <a href="{{ .Site.Params.homepage }}/" class="flex items-center">
-        <img src="../static/images/logo.png" class="h-6 mr-3 sm:h-9" alt="Chessers Logo" />
-        <span class="self-center text-xl font-semibold whitespace-nowrap text-white">Chessers</span>
+      <img
+        src="../static/images/logo.png"
+        class="h-6 mr-3 sm:h-9"
+        alt="Chessers Logo"
+      />
+      <span
+        class="self-center text-xl font-semibold whitespace-nowrap text-white"
+        >Chessers</span
+      >
     </a>
-    <button data-collapse-toggle="mobile-menu" type="button" class="inline-flex items-center p-2 ml-3 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="mobile-menu" aria-expanded="false">
+    <button
+      data-collapse-toggle="mobile-menu"
+      type="button"
+      class="inline-flex items-center p-2 ml-3 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+      aria-controls="mobile-menu"
+      aria-expanded="false"
+    >
       <span class="sr-only">Open main menu</span>
-      <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path></svg>
-      <svg class="hidden w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+      <svg
+        class="w-6 h-6"
+        fill="currentColor"
+        viewBox="0 0 20 20"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+          clip-rule="evenodd"
+        ></path>
+      </svg>
+      <svg
+        class="hidden w-6 h-6"
+        fill="currentColor"
+        viewBox="0 0 20 20"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+          clip-rule="evenodd"
+        ></path>
+      </svg>
     </button>
     <!-- <div class="hidden w-full md:block md:w-auto" id="mobile-menu"> -->
-      <!-- <ul class="flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium"> -->
-        <button type="button" class="px-3 py-2 text-sm font-medium text-center text-white bg-orange-500 rounded-lg hover:bg-orange-600 focus:ring-4 focus:outline-none focus:ring-orange-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Play</button>
-      <!-- </ul> -->
+    <!-- <ul class="flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium"> -->
+    <button
+      type="button"
+      class="px-3 py-2 text-sm font-medium text-center text-white bg-orange-500 rounded-lg hover:bg-orange-600 focus:ring-4 focus:outline-none focus:ring-orange-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+    >
+      Play
+    </button>
+    <!-- </ul> -->
     <!-- </div> -->
   </div>
 </nav>
-{% endblock navbar %}
-
-{% block content %}
+{% endblock navbar %} {% block content %}
 <div class="mx-auto flex flex-row">
-    <div id="myBoard" style="width: 570px; margin:10px"></div>
-    <div class="flex">
-        
-        <div id="status" class="text-white"></div>
-    </div>
-   
+  <div id="myBoard" style="width: 570px; margin: 10px"></div>
+  <div class="flex">
+    <div id="status" class="text-white"></div>
+  </div>
 </div>
-   
 
-{% endblock content %}
-{% block javascript %} 
+{% endblock content %} {% block javascript %}
 
 <script type="module">
-import { Chess } from 'https://unpkg.com/chess.js/dist/esm/chess.js'
-var board = null
-var game = new Chess()
-var $status = $('#status')
-var $fen = $('#fen')
-var $pgn = $('#pgn')
-
-console.log(game);
-function onDragStart (source, piece, position, orientation) {
-  // do not pick up pieces if the game is over
-  if (game.isGameOver()) return false
-
-  // only pick up pieces for the side to move
-  if ((game.turn() === 'w' && piece.search(/^b/) !== -1) ||
-      (game.turn() === 'b' && piece.search(/^w/) !== -1)) {
-    return false
-  }
-}
-
-function onDrop (source, target) {
-  // see if the move is legal
-  try {
-    var move = game.move({
-    from: source,
-    to: target,
-    promotion: 'q' // NOTE: always promote to a queen for example simplicity
-  })
-  } catch (error) {
-    return 'snapback'
-  }
+  let socket = new WebSocket("ws://localhost:8000/ws/game/123/");
+  socket.onopen = function (e) {
+    console.log("Socket connected");
+  };
   
-  console.log(move);
 
-  updateStatus()
-}
+  import { Chess } from "https://unpkg.com/chess.js/dist/esm/chess.js";
+  let turn="w";
+  var board = null;
+  var game = new Chess();
+  var $status = $("#status");
+  var $fen = $("#fen");
+  var $pgn = $("#pgn");
 
-// update the board position after the piece snap
-// for castling, en passant, pawn promotion
-function onSnapEnd () {
-  board.position(game.fen())
-}
-
-function updateStatus () {
-  var status = ''
   
-  var moveColor = 'White'
-  if (game.turn() === 'b') {
-    moveColor = 'Black'
-  }
+  console.log(game);
+  function onDragStart(source, piece, position, orientation) {
+    // do not pick up pieces if the game is over
+    if (game.isGameOver()) return false;
+    if (game.turn()!==turn) return false;
 
-  // checkmate
-  if (game.isCheckmate()) {
-    status = 'Game over, ' + moveColor + ' is in checkmate.'
-  }
-
-  // draw
-  else if (game.isDraw()) {
-    status = 'Game over, drawn position'
-  }
-
-  // game still on
-  else {
-    status = moveColor + ' to move'
-
-    // check?
-    if (game.isCheck()) {
-      status += ', ' + moveColor + ' is in check'
+    // only pick up pieces for the side to move
+    if (
+      (game.turn() === "w" && piece.search(/^b/) !== -1) ||
+      (game.turn() === "b" && piece.search(/^w/) !== -1)
+    ) {
+      return false;
     }
   }
-  console.log(game);
-  $status.html(status)
-  $fen.html(game.fen())
-  $pgn.html(game.pgn())
+
+  function changeSideToMove() {
+    var currentFEN = board.fen(); // Get the current FEN of the board
+    console.log(currentFEN);
+    if (currentFEN.indexOf(' w ') > -1) {
+        // White to move, switch to black's turn
+        game.turn('b')
+    } else if (currentFEN.indexOf(' b ') > -1) {
+        // Black to move, switch to white's turn
+        game.turn('w')
+    }
 }
 
-var config = {
-  draggable: true,
-  position: 'start',
-  onDragStart: onDragStart,
-  onDrop: onDrop,
-  onSnapEnd: onSnapEnd,
-  pieceTheme:'/static/img/chesspieces/wikipedia/{piece}.png'
-}
-board = Chessboard('myBoard', config)
-updateStatus()
+  function onDrop(source, target) {
+    // see if the move is legal
+    try {
+      var move = game.move({
+        from: source,
+        to: target,
+        promotion: "q", // NOTE: always promote to a queen for example simplicity
+      });
+    } catch (error) {
+      return "snapback";
+    }
+    var data = {
+      move:move
+    };
+    console.log(move);
+    socket.send(
+      JSON.stringify({
+        data,
+      })
+    );
+    updateStatus();
+    console.log(game.turn());
+  }
+
+  // update the board position after the piece snap
+  // for castling, en passant, pawn promotion
+  function onSnapEnd() {
+    board.position(game.fen());
+  }
+
+  function updateStatus() {
+    
+    var status = "";
+
+    var moveColor = "White";
+    if (game.turn() === "b") {
+      moveColor = "Black";
+    }
+
+    // checkmate
+    if (game.isCheckmate()) {
+      status = "Game over, " + moveColor + " is in checkmate.";
+    }
+
+    // draw
+    else if (game.isDraw()) {
+      status = "Game over, drawn position";
+    }
+
+    // game still on
+    else {
+      status = moveColor + " to move";
+
+      // check?
+      if (game.isCheck()) {
+        status += ", " + moveColor + " is in check";
+      }
+    }
+    // console.log(game);
+    $status.html(status);
+    $fen.html(game.fen());
+    $pgn.html(game.pgn());
+  }
+
+  socket.onmessage = function (e) {
+    var data = JSON.parse(e.data);
+    console.log(data);
+    var algebraicNotation = data.payload.move.from +'-'+data.payload.move.to
+    console.log(algebraicNotation);
+    board.move(algebraicNotation)
+    //change the move as well
+    // changeSideToMove();
+
+  };
+
+  var config = {
+    draggable: true,
+    position: "start",
+    onDragStart: onDragStart,
+    onDrop: onDrop,
+    onSnapEnd: onSnapEnd,
+    pieceTheme: "/static/img/chesspieces/wikipedia/{piece}.png",
+  };
+  board = Chessboard("myBoard", config);
+  updateStatus();
 </script>
 {% endblock javascript %}
-
