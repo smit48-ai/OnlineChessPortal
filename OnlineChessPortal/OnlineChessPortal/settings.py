@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 import environ
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -61,13 +62,26 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     'users',
-    "ChessGame"
+    "ChessGame",
+    "tournaments"
 ]
 
-INSTALLED_APPS = INSTALLED_APPS + THIRD_PARTY_APPS + LOCAL_APPS
+INSTALLED_APPS = INSTALLED_APPS + LOCAL_APPS + THIRD_PARTY_APPS
 
+# settings.py
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+# Email Backend Configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  # Change as needed
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'mailservice2422@gmail.com'
+EMAIL_HOST_PASSWORD = 'emokowrolpxsxymy'
+EMAIL_USE_TLS = True 
+EMAIL_USE_SSL = False
 
+ # Or False based on your email configuration
 #TODO: Deicde these
 # Auth0 settings
 # SOCIAL_AUTH_TRAILING_SLASH = False  # Remove trailing slash from routes
@@ -94,7 +108,7 @@ INSTALLED_APPS = INSTALLED_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
-    "allauth.account.auth_backends.AuthenticationBackend",
+    
 )
 
 # SITE_ID = 1
@@ -118,7 +132,8 @@ TEMPLATES = [
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         'DIRS': [BASE_DIR / 'templates',
                  BASE_DIR / 'users/templates',
-                 BASE_DIR / 'ChessGame/templates'],
+                 BASE_DIR / 'ChessGame/templates',
+                 BASE_DIR / 'tournament/templates'],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [

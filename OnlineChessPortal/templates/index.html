@@ -5,7 +5,7 @@
 {% load compress %}
 
 {% block navbar %}
-<nav class="bg-gray-800 border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-800">
+<nav class="sticky top-0 z-50 bg-gray-800 border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-800">
   <div class="container flex flex-wrap items-center justify-between mx-auto">
     <a href="{{ .Site.Params.homepage }}/" class="flex items-center">
         <img src="../../static/images/logo.png" class="h-6 mr-3 sm:h-9" alt="Chessers Logo" />
@@ -17,9 +17,11 @@
       <svg class="hidden w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
     </button>
     <div class="hidden w-full md:block md:w-auto" id="mobile-menu">
-      <ul class="flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium">
-        <a href="http://127.0.0.1:8000/game/play"><button type="button" class="px-3 py-2 text-sm font-medium text-center bg-orange-500 rounded-lg hover:bg-orange-700 focus:ring-4 focus:outline-none focus:ring-blue-300">Play</button></a>
-      </ul>
+      <ul class="flex flex-col mt-4 md:flex-row md:space-x-5 md:mt-0 md:text-sm md:font-medium">
+        <button type="button" data-modal-target="play-modal" data-modal-toggle="play-modal" class="px-3 py-2 text-sm font-medium text-center bg-orange-500 rounded-lg hover:bg-orange-700 focus:ring-4 focus:outline-none focus:ring-blue-300">Play</button>
+        <button type="button" data-modal-target="join-modal" data-modal-toggle="join-modal" class="px-3 py-2 text-sm font-medium text-center bg-orange-500 rounded-lg hover:bg-orange-700 focus:ring-4 focus:outline-none focus:ring-blue-300">Join</button>
+        <a href="{% url 'logout' %}"><button type="button" class="px-3 py-2 text-sm font-medium text-center bg-orange-500 rounded-lg hover:bg-orange-700 focus:ring-4 focus:outline-none focus:ring-blue-300">Logout</button></a>
+    </ul>
     </div>
   </div>
 </nav>
@@ -27,64 +29,215 @@
 {% endblock navbar %}
 
 {% block content %}
+{% for message in messages %}
+<div id="toast-danger" class="mt-5 mx-auto flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
+    <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200">
+        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 11.793a1 1 0 1 1-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L8.586 10 6.293 7.707a1 1 0 0 1 1.414-1.414L10 8.586l2.293-2.293a1 1 0 0 1 1.414 1.414L11.414 10l2.293 2.293Z"/>
+        </svg>
+        <span class="sr-only">Error icon</span>
+    </div>
+    <div class="ml-3 text-sm font-normal">{{message}}</div>
+    <button type="button" class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-danger" aria-label="Close">
+        <span class="sr-only">Close</span>
+        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+        </svg>
+    </button>
+</div>
+{% endfor %}
+
    
+<div class="w-full p-14 flex flex-row space-x-10  justify-center flex-wrap">
 
-<div class="w-full max-w-sm mt-10 ml-10 border border-gray-800 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
 
-  <div class="bg-gray-800 flex flex-col items-center pb-10">
-      <img class="w-24 h-24 mb-3 mt-3 rounded-full shadow-lg" src="{% static '/images/profilepic.png' %}" alt="Bonnie image"/>
+<div class="w-full max-w-sm ml-10 mt-10 dark:bg-gray-800 dark:border-gray-700">
+
+  <div class="bg-gray-800 border border-gray-800 rounded-lg shadow flex flex-col items-center pb-10">
+      <img class="w-24 h-24 mb-3 mt-3 rounded-full shadow-lg" src="{{user.profile_picture.url}}" alt="Bonnie image"/>
       <h5 class="mb-1 text-xl font-medium text-white">{{user.username}}</h5>
-      <span class="text-sm text-white">Rating</span>
-      <div class="flex mt-4 space-x-3 md:mt-6">
-        <button type="button" data-modal-target="authentication-modal" data-modal-toggle="authentication-modal" class="px-3 py-2 text-sm font-medium text-center bg-orange-500 rounded-lg hover:bg-orange-700 focus:ring-4 focus:outline-none focus:ring-blue-300">Add Friend</button>
+      <span class="text-sm text-white">{{user.Rating}}</span>
+      <div class="w-full">
+        <form action="{% url 'profile' %}" method="POST" class="w-full ml-10 align-middle flex-col space-x-3 justify-center md:mt-6" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input class="block  text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="file_input_help" name="profile_picture" type="file">
+            <button type="submit" class="ml-0 px-3 py-2 mt-4 text-sm font-medium text-center bg-orange-500 rounded-lg hover:bg-orange-700 focus:ring-4 focus:outline-none focus:ring-blue-300">Change Profile Pic</button>
+        </form>
       </div>
   </div>
+</div>
+
+<div class="bg-gray-800 border space-x-6 p-10 mt-10 border-gray-800 rounded-lg shadow flex flex-row items-center pb-10">
+    <div class="flex flex-col align-middle">
+        <!-- <a href="https://www.flaticon.com/free-icons/winner" title="winner icons">Winner icons created by Freepik - Flaticon</a> -->
+        <img class="w-24 h-24 mb-3 mt-3" src="{% static '/images/medal.png' %}" alt="Bonnie image"/>
+        <h5 class="mb-1 mx-auto text-xl font-medium text-white">Won</h5>
+        <h5 class="mb-1 mx-auto text-xl font-medium text-white">{{wins}}</h5>
+    </div>
+    <div class="flex flex-col">
+        <!-- <a href="https://www.flaticon.com/free-icons/winner" title="winner icons">Winner icons created by Freepik - Flaticon</a> -->
+        <img class="w-24 h-24 mb-3 mt-3" src="{% static '/images/loser.png' %}" alt="Bonnie image"/>
+        <h5 class="mb-1 mx-auto text-xl font-medium text-white">lose</h5>
+        <h5 class="mb-1 mx-auto text-xl font-medium text-white">{{lose}}</h5>
+    </div>
+    <div class="flex flex-col">
+        <!-- <a href="https://www.flaticon.com/free-icons/winner" title="winner icons">Winner icons created by Freepik - Flaticon</a> -->
+        <img class="w-24 h-24 mb-3 mt-3" src="{% static '/images/chess-game.png' %}" alt="Bonnie image"/>
+        <h5 class="mb-1 mx-auto text-xl font-medium text-white">Draw</h5>
+        <h5 class="mb-1  mx-auto text-xl font-medium text-white">{{draw}}</h5>
+    </div>
+</div>
+</div>
+
+
+<div class="w-full mb-10 flex flex-row space-x-10 justify-center flex-wrap">
+<div class="w-full mt-10 h-70 flex-auto max-w-md p-4 bg-gray-800  rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
+    <div class="flex items-center justify-between mb-4">
+        <h5 class="text-xl font-bold leading-none text-white dark:text-white">All Users</h5>
+   </div>
+   <div class="flow-root h-72 overflow-scroll no-scrollbar">
+        <ul role="list" class="divide-y overflow-scroll no-scrollbar divide-gray-200 dark:divide-gray-700">
+            {% for user in Allusers %}
+            <li class="py-3 sm:py-4">
+                <div class="flex items-center space-x-4">
+                    <div class="flex-shrink-0">
+                        <img class="w-8 h-8 rounded-full" src="{{user.profile_picture.url}}" alt="profile image">
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-medium text-white truncate dark:text-white">
+                            {{user.username}}
+                        </p>
+                        <p class="text-sm text-gray-500 truncate dark:text-gray-400">
+                            {{user.email}}
+                        </p>
+                    </div>
+                </div>
+            </li>
+        {% endfor %}
+           
+            
+        </ul>
+   </div>
+
+   
+</div>
+
+
+    
+<div class="mt-10 overflow-x-auto shadow-md sm:rounded-lg">
+    <table class="w-4/6  h-48 text-sm text-left text-gray-500 dark:text-gray-400">
+        <caption class="p-5 text-lg font-semibold text-left text-white bg-gray-800 dark:text-white dark:bg-gray-800">
+            All Tournaments
+            <div> <a href="{% url 'Create' %}"> <button type="button"  class=" mt-4 px-3 py-2 text-sm font-medium text-center bg-orange-500 rounded-lg hover:bg-orange-700 focus:ring-4 focus:outline-none focus:ring-blue-300">Create tournament</button></a></div>
+           
+        </caption>
+        <thead class="text-xs text-white uppercase bg-gray-700 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+                <th scope="col" class="px-6 py-3">
+                    Contest name
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    players
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    <span class="sr-only">Join</span>
+                </th> 
+            </tr>
+        </thead>
+        <tbody class="overflow-y-scroll">
+            {% for tournament in tournaments %}
+            {{tournament.name}}
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    {{tournament.Name}}
+                </th>
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    {{tournament.count}}
+                </th>
+                <td class="px-6 py-4 text-right">
+                    <a href="{%url 'Page' tournament.id %}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Join</a>
+                </td>
+            </tr>
+           {% endfor %}
+           </tbody>
+    </table>
+</div>
+
+</div>
+
+
+
+
 
   
 
 
-<!-- Main modal -->
-<div id="authentication-modal" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+<!-- Play Modal -->
+<div id="play-modal" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative w-full max-w-md max-h-full">
         <!-- Modal content -->
         <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-            <button type="button" class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="authentication-modal">
+            <button type="button" class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="play-modal">
                 <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
                 </svg>
                 <span class="sr-only">Close modal</span>
             </button>
             <div class="px-6 py-6 lg:px-8">
-                <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Sign in to our platform</h3>
-                <form class="space-y-6" action="#">
+                <h3 class="mb-4 text-xl font-medium text-gray-800 dark:text-white">Enter Players details</h3>
+                <form class="space-y-6" action="{% url 'playView' %}" method="Post">
+                    {%csrf_token%}
                     <div>
-                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
-                        <input type="email" name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="name@company.com" required>
+                        <label for="Player2" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Player2 Username</label>
+                        <input type="username" name="Player2" id="Player2" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="xyz" required="">
                     </div>
-                    <div>
-                        <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your password</label>
-                        <input type="password" name="password" id="password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required>
-                    </div>
-                    <div class="flex justify-between">
-                        <div class="flex items-start">
-                            <div class="flex items-center h-5">
-                                <input id="remember" type="checkbox" value="" class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-600 dark:border-gray-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800" required>
-                            </div>
-                            <label for="remember" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Remember me</label>
-                        </div>
-                        <a href="#" class="text-sm text-blue-700 hover:underline dark:text-blue-500">Lost Password?</a>
-                    </div>
-                    <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Login to your account</button>
-                    <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
-                        Not registered? <a href="#" class="text-blue-700 hover:underline dark:text-blue-500">Create account</a>
-                    </div>
+                    <!-- <div>
+                        <label for="Player2" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Player2 Username</label>
+                        <input type="username" name="Player2" id="Player2" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="xyz" required="">
+                    </div> -->
+                    <button type="submit" class="w-full text-white bg-slate-800 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Start Game</button>
+                  
                 </form>
             </div>
+            
+        </div>
+      
+    </div>
+</div> 
+
+<!-- Join Modal -->
+<div id="join-modal" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative w-full max-w-md max-h-full">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+            <button type="button" class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="join-modal">
+                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                </svg>
+                <span class="sr-only">Close modal</span>
+            </button>
+            <div class="px-6 py-6 lg:px-8">
+                <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Enter Players details</h3>
+                <form class="space-y-6" action="{% url 'joinView' %}" method="Post">
+                    {%csrf_token%}
+                    <div>
+                        <label for="code" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Room Code</label>
+                        <input type="code" name="code" id="code" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="xyz" required="">
+                    </div>
+                    <button type="submit" class="w-full text-white bg-slate-800 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Start Game</button>
+                  
+                </form>
+            </div>
+            
+          
+    
+
         </div>
     </div>
 </div> 
 
 </div>
+
 {% endblock content %}
 {% block javascript %}
 <script>

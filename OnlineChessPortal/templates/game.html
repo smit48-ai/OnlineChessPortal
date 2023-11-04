@@ -1,0 +1,355 @@
+<!-- templates/index.html -->
+
+{% extends "_base.html" %} {% load static %}{% block navbar %}
+<nav
+  class="bg-gray-800 border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-800"
+>
+  <div class="container flex flex-wrap items-center justify-between mx-auto">
+    <!-- <a href="{{ .Site.Params.homepage }}/" class="flex items-center"> -->
+    <div class="flex flex-row items-center">
+      <img
+        src="{%static '/images/logo.png' %}"
+        class="h-6 mr-3 sm:h-9"
+        alt="Chessers Logo"
+      />
+      <!-- <span
+        class="self-center text-xl font-semibold whitespace-nowrap text-white"
+        >Chessers</span
+      > -->
+      <span class="text-xl ml-2 font-medium text-white">(Room Code : {{code}})</span>
+    </div>
+    <div class="text-white text-xl flex">
+      <span>Status :  </span><div id="status" ></div>
+    </div>
+    
+    <!-- <button
+      data-collapse-toggle="mobile-menu"
+      type="button"
+      class="inline-flex items-center p-2 ml-3 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+      aria-controls="mobile-menu"
+      aria-expanded="false"
+    > -->
+      <!-- <span class="sr-only">Open main menu</span>
+      <svg
+        class="w-6 h-6"
+        fill="currentColor"
+        viewBox="0 0 20 20"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+          clip-rule="evenodd"
+        ></path>
+      </svg>
+      <svg
+        class="hidden w-6 h-6"
+        fill="currentColor"
+        viewBox="0 0 20 20"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+          clip-rule="evenodd"
+        ></path>
+      </svg>
+    </button> -->
+    <!-- <div class="hidden w-full md:block md:w-auto" id="mobile-menu"> -->
+    <!-- <ul class="flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium"> -->
+      <div class="flex space-x-4 items-center">
+        <div class="text-white">
+          {{user.username}}
+       </div>
+     
+        {%if user.username == player1.username or user.username == player2.username %}
+        <button
+        type="button"
+        id="resgin"
+        class="px-3 py-2 text-sm font-medium text-center text-white bg-orange-500 rounded-lg hover:bg-orange-600 focus:ring-4 focus:outline-none focus:ring-orange-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+      >
+        Resign
+      </button>
+        {% endif %}
+   
+      <!-- </ul> -->
+      <!-- </div> -->
+  
+     
+      <button id="result" style="display: none;" data-modal-target="popup-modal" data-modal-toggle="popup-modal" class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
+        Toggle modal
+      </button>
+      <div id="popup-modal" tabindex="-1" class="fixed top-0 left-0 right-0 z-50 hidden p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative w-full max-w-md max-h-full">
+            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                <div id="modal-content" class="p-6 text-center">
+                  
+                </div>
+            </div>
+        </div>
+    </div>
+      
+     
+  
+
+      </div>
+    
+
+  </div>
+</nav>
+{% endblock navbar %} {% block content %}
+<div class="flex flex-col justify-center flex-wrap">
+ 
+  <div class="mx-auto flex space-x-3 items-center">
+    <div class="flex space-x-3 items-center">
+      <img class="w-10 h-10  mb-3 mt-3 rounded-full shadow-lg" src="{{player1.profile_picture.url}}" alt="Bonnie image"/>
+      <h5 class="text-xl  mb-3 mt-3 font-medium text-white">{{player1.username}} (White)</h5>
+    </div>
+    <div class="text-white mb-3 mt-3 text-lg">Vs</div>
+    <div class="flex space-x-3 items-center">
+      <img class="w-10 h-10 mb-3 mt-3 rounded-full shadow-lg" src="{{player2.profile_picture.url}}" alt="Bonnie image"/>
+      <h5 class="text-xl mb-3 mt-3 font-medium text-white">{{player2.username}} (Black)</h5>
+    </div>
+  </div>
+  <div class="mx-auto">
+    <div id="myBoard" style="width: 520px; margin: 10px"></div>
+  </div>
+  <!-- <div class="flex-col"> -->
+   
+   
+  <!-- </div> -->
+</div>
+
+{% endblock content %} {% block javascript %}
+
+<script type="module">
+  let socket = new WebSocket("ws://localhost:8000/ws/game/"+'{{code}}'+'/');
+  socket.onopen = function (e) {
+    console.log("Socket connected");
+  };
+  
+
+  import { Chess } from "https://unpkg.com/chess.js/dist/esm/chess.js";
+  let turn="n";
+  var player1='{{player1.username}}'
+  var player2='{{player2.username}}'
+  console.log('{{player1.username}}');
+  var board = null;
+  var game = new Chess();
+  if('{{position}}'!=='start' && '{{position}}'!=='')game.load('{{position}}')
+  var $status = $("#status");
+  var $fen = $("#fen");
+  let gamestatus="running"
+  var $pgn = $("#pgn");
+
+
+  function handleGameOver(how,winner,other){
+    var toggle_button=document.getElementById("result");
+    toggle_button.click()
+    var divElement=document.getElementById("modal-content");
+    console.log(winner);
+    if(how==="resgin"){
+      divElement.innerHTML='<h3 class="mb-5 text-lg font-normal text-black dark:text-gray-400">Game resgined by '+other+'</h3><h3 class="mb-5 text-lg font-normal text-black dark:text-gray-400">Rating Changes : '+winner+' : +20  '+other+' : -20</h3><a href="{% url "index" user.id %}"><button data-modal-hide="popup-modal" type="button" class="text-white bg-slate-800 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Close</button></a>'
+    }
+    else{
+      divElement.innerHTML='<h3 class="mb-5 text-lg font-normal text-black dark:text-gray-400">Game won by '+winner+'</h3><h3 class="mb-5 text-lg font-normal text-black dark:text-gray-400">Rating Changes : '+winner+' : +20  '+other+' : -20</h3><a href="{% url "index" user.id %}"><button data-modal-hide="popup-modal" type="button" class="text-white bg-slate-800 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Close</button></a>'
+    }
+    // console.log("handling game over called");
+ 
+  }
+ 
+  function onDragStart(source, piece, position, orientation) {
+    console.log("Drag is called");
+    console.log(gamestatus);
+    // do not pick up pieces if the game is over
+    if (game.isGameOver()){
+
+      return false;
+    } 
+    if (game.turn()!==turn) return false;
+    if(gamestatus==="resgin") return false;
+
+    // only pick up pieces for the side to move
+    if (
+      (game.turn() === "w" && piece.search(/^b/) !== -1) ||
+      (game.turn() === "b" && piece.search(/^w/) !== -1)
+    ) {
+      return false;
+    }
+  }
+
+
+  function onDrop(source, target) {
+    // see if the move is legal
+    try {
+      var move = game.move({
+        from: source,
+        to: target,
+        promotion: "q", // NOTE: always promote to a queen for example simplicity
+      });
+    } catch (error) {
+      return "snapback";
+    }
+    
+    let status=updateStatus();
+    var data = {
+      move:move,
+      position:game.fen(),
+      code:'{{code}}',
+      status:status
+    };
+    socket.send(
+      JSON.stringify({
+        data,
+      })
+    );
+    console.log(game.turn());
+  }
+
+  // update the board position after the piece snap
+  // for castling, en passant, pawn promotion
+  function onSnapEnd() {
+    board.position(game.fen());
+  }
+
+  function updateStatus() {
+    
+    var status = "";
+
+    var statusData={
+      status:"running"
+    }
+    
+    var moveColor = "White";
+    if (game.turn() === "b") {
+      moveColor = "Black";
+    }
+
+    // checkmate
+    if (game.isCheckmate()) {
+      status = "Game over, " + moveColor + " is in checkmate.";
+      if(moveColor==='White'){
+        statusData={
+        status:"complete",
+        winner:'{{player2}}'
+      }
+    }
+      else{
+        statusData={
+        status:"complete",
+        winner:'{{player1}}'
+      }
+      }
+  
+    }
+
+    // draw
+    else if (game.isDraw()) {
+      status = "Game over, drawn position";
+    
+        statusData={
+        status:"complete",
+        winner:'draw'
+      }
+    }
+
+    // game still on
+    else {
+      status = moveColor + " to move";
+
+      // check?
+      if (game.isCheck()) {
+        status += ", " + moveColor + " is in check";
+      }
+    }
+    // console.log(game);
+
+    if(statusData.status==="complete"){
+      console.log(statusData.winner);
+      if(statusData.winner===player1) handleGameOver("complete",player1,player2);
+      else handleGameOver("complete",player2,player1);
+    }
+    $status.html(status);
+    $fen.html(game.fen());
+    $pgn.html(game.pgn());
+    return statusData;
+  }
+
+  socket.onmessage = function (e) {
+    var data = JSON.parse(e.data);
+    console.log(data);    
+    if(data.payload.status.status!=="resgin"){
+      var move=game.move({
+        from: data.payload.move.from,
+        to: data.payload.move.to,
+        promotion: "q", // NOTE: always promote to a queen for example simplicity
+      });
+    let positions=game.move
+    var algebraicNotation = move.from + '-' + move.to
+    board.move(algebraicNotation);
+    console.log(positions);
+    board.position(game.fen());
+    updateStatus();
+    }
+    else{
+      if(data.payload.status.winner.username===player1) handleGameOver("resgin",player1,player2);
+      else handleGameOver("resgin",player2,player1);
+    }
+   
+  };
+  // console.log('{{position}}');
+  
+  var config = {
+    draggable: true,
+    position: "start",
+    onDragStart: onDragStart,
+    onDrop: onDrop,
+    onSnapEnd: onSnapEnd,
+    pieceTheme: "/static/img/chesspieces/wikipedia/{piece}.png",
+  };
+  board = Chessboard("myBoard", config);
+  board.position('{{position}}')
+  updateStatus();
+  if("{{user.username}}"=== player1){
+    turn='w'
+    board.orientation('white')
+  }
+  else if("{{user.username}}"=== player2){
+    turn='b'
+    board.orientation('black')
+  }
+
+  var resing_button=document.getElementById("resgin");
+  console.log(resing_button);
+  resing_button.addEventListener("click",(e)=>{
+    console.log("button clicked");
+    let statusData;
+    gamestatus="resgin"
+    if('{{user.username}}'===player1){
+      statusData={
+        status:"resgin",
+        winner:'{{player2}}'
+       }
+    }
+    else{
+      statusData={
+        status:"resgin",
+        winner:'{{player1}}'
+       }
+    }
+    var data = {
+      move:"",
+      position:"",
+      code:'{{code}}',
+      status:statusData
+    };
+    socket.send(
+      JSON.stringify({
+        data,
+      })
+    ); 
+    if('{{user.username}}'===player1) handleGameOver("resgin",player2,player1);
+      else handleGameOver("resgin",player1,player2);
+  })  
+</script>
+{% endblock javascript %}

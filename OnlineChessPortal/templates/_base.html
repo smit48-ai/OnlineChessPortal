@@ -17,6 +17,11 @@
     {% compress css %}
     <link rel="stylesheet" href="{% static 'src/output.css' %}">
     {% endcompress %}
+    <style> 
+        .no-scrollbar::-webkit-scrollbar { 
+            display: none; 
+        } 
+    </style> 
   
 
 </head>
@@ -44,6 +49,7 @@
         crossorigin="anonymous"></script>
         {% block javascript %}
         {% endblock javascript %}
+    
 </body>
 
 </html>
