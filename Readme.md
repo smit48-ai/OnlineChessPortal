@@ -1,6 +1,6 @@
-# Project Title
+# Online Chess Portal
 
-Online Chess Portal
+A portal for chess players to play with other users in realtime
 
 ## Table of Contents
 
