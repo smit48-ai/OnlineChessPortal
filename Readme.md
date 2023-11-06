@@ -55,12 +55,3 @@ List the technologies, frameworks, and tools used in the project. For example:
 - Chess.js
 - Chessboard.js
 
-## Contributing
-
-Explain how others can contribute to the project. You can include guidelines for reporting issues, submitting pull requests, and any other contribution-related information.
-
-## License
-
-Specify the project's license. For example:
-
-This project is licensed under the [MIT License](link-to-license).
